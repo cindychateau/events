@@ -105,4 +105,31 @@ public class AppService {
 		return repositorio_event.findByStateIsNot(state);
 	}
 	
+	public Event find_event(Long id) {
+        Optional<Event> optionalEvent = repositorio_event.findById(id);
+        if(optionalEvent.isPresent()) {
+            return optionalEvent.get();
+        } else {
+            return null;
+        }
+    }
+	
+	public void save_event_user(Long user_id, Long event_id) {
+		User myUser = find_user(user_id);
+		Event myEvent = find_event(event_id);
+		
+		myUser.getEventsAttending().add(myEvent);
+		repositorio_user.save(myUser);
+		
+	}
+	
+	public void remove_event_user(Long user_id, Long event_id) {
+		User myUser = find_user(user_id);
+		Event myEvent = find_event(event_id);
+		
+		myUser.getEventsAttending().remove(myEvent);
+		repositorio_user.save(myUser);
+	}
+	
+	
 }

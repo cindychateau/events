@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -57,5 +59,36 @@ public class EventController {
 		servicio.save_event(event);
 		return "redirect:/dashboard";
 	}
+	
+	@GetMapping("/join/{event_id}")
+	public String join_event(@PathVariable("event_id") Long event_id, HttpSession session){
+		/*REVISAMOS SESION*/
+		User currentUser = (User)session.getAttribute("user_session");
+		if(currentUser == null) {
+			return "redirect:/";
+		}
+		/*REVISAMOS SESION*/
+		
+		servicio.save_event_user(currentUser.getId(), event_id);
+		
+		return "redirect:/dashboard";
+		
+	}
+	
+	@GetMapping("/remove/{event_id}")
+	public String remove_event(@PathVariable("event_id") Long event_id, HttpSession session) {
+		/*REVISAMOS SESION*/
+		User currentUser = (User)session.getAttribute("user_session");
+		if(currentUser == null) {
+			return "redirect:/";
+		}
+		/*REVISAMOS SESION*/
+		
+		servicio.remove_event_user(currentUser.getId(), event_id);
+		
+		return "redirect:/dashboard";
+	}
+	
+	
 	
 }
