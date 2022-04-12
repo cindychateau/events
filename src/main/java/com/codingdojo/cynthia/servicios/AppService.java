@@ -140,5 +140,9 @@ public class AppService {
 		return repositorio_message.save(thisMessage);
 	}
 	
+	public void delete_event(Long id) {
+		repositorio_event.deleteById(id);
+	}
+	
 	
 }

@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.codingdojo.cynthia.modelos.Event;
@@ -129,6 +131,61 @@ public class EventController {
 		return "redirect:/events/"+event_id;
 		
 		
+	}
+	
+	@GetMapping("/edit/{event_id}")
+	public String edit_event(@PathVariable("event_id") Long event_id, HttpSession session, Model model) {
+		/*REVISAMOS SESION*/
+		User currentUser = (User)session.getAttribute("user_session");
+		if(currentUser == null) {
+			return "redirect:/";
+		}
+		/*REVISAMOS SESION*/
+		
+		Event evento = servicio.find_event(event_id);
+		
+		if(evento == null || !evento.getPlanner().getId().equals(currentUser.getId())) {
+			return "redirect:/dashboard";
+		}
+		
+		model.addAttribute("evento",evento);
+		model.addAttribute("states", State.States);
+		
+		return "edit.jsp";
+	}
+	
+	@PutMapping("/update")
+	public String update_event(@Valid @ModelAttribute("evento") Event evento, 
+							   BindingResult result, HttpSession session, Model model) {
+		if(result.hasErrors()) {
+			model.addAttribute("states", State.States);
+			return "edit.jsp";
+		}
+		
+		Event thisEvent = servicio.find_event(evento.getId());
+		evento.setAttendees(thisEvent.getAttendees());
+		servicio.save_event(evento);
+		
+		return "redirect:/dashboard";
+	}
+	
+	@DeleteMapping("/delete/{event_id}")
+	public String delete_event(@PathVariable("event_id") Long event_id, HttpSession session) {
+		/*REVISAMOS SESION*/
+		User currentUser = (User)session.getAttribute("user_session");
+		if(currentUser == null) {
+			return "redirect:/";
+		}
+		/*REVISAMOS SESION*/
+		
+		Event evento = servicio.find_event(event_id);
+		if(evento == null || !evento.getPlanner().getId().equals(currentUser.getId())) {
+			return "redirect:/dashboard";
+		}
+		
+		servicio.delete_event(event_id);
+		
+		return "redirect:/dashboard";
 	}
 	
 	
