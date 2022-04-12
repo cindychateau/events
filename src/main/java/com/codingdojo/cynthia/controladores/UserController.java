@@ -1,5 +1,7 @@
 package com.codingdojo.cynthia.controladores;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -85,7 +87,14 @@ public class UserController {
 		
 		model.addAttribute("states", State.States);
 		model.addAttribute("user", myUser);
-		/*Falta lista de eventos en mi estado, y lista de eventos en otros estados*/
+		/*lista de eventos en mi estado*/
+		String miEstado = currentUser.getState(); //Obtenemos estado del usuario
+		List<Event> eventos_miestado = servicio.eventos_estado(miEstado); //Lista de eventos
+		
+		List<Event> eventos_otrosedos = servicio.eventos_otros(miEstado); //Lista de eventos fuera de mi estado
+		
+		model.addAttribute("eventos_miestado", eventos_miestado);
+		model.addAttribute("eventos_otrosedos", eventos_otrosedos);
 		
 		return "dashboard.jsp";
 	}

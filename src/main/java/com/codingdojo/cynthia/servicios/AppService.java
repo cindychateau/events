@@ -1,5 +1,6 @@
 package com.codingdojo.cynthia.servicios;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -92,6 +93,16 @@ public class AppService {
 	/*Guarda evento en BD*/
 	public Event save_event(Event thisEvent) {
 		return repositorio_event.save(thisEvent);
+	}
+	
+	/*Regresa lista de eventos en mi estado*/
+	public List<Event> eventos_estado(String state){
+		return repositorio_event.findByState(state);
+	}
+	
+	/*Regresa lista de eventos en otros estados*/
+	public List<Event> eventos_otros(String state){
+		return repositorio_event.findByStateIsNot(state);
 	}
 	
 }

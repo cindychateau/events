@@ -56,7 +56,7 @@ public class Event {
 		joinColumns = @JoinColumn(name="event_id"),
 		inverseJoinColumns = @JoinColumn(name="user_id")
 	)
-	private List<User> attendees;
+	private List<User> attendees; //Los asistentes al evento
 	
 	@Column(updatable=false)
 	@DateTimeFormat(pattern="yyyy-MM-dd")
