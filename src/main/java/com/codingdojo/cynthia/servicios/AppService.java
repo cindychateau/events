@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import com.codingdojo.cynthia.modelos.Event;
 import com.codingdojo.cynthia.modelos.LoginUser;
 import com.codingdojo.cynthia.modelos.User;
+import com.codingdojo.cynthia.repositorios.EventRepository;
 import com.codingdojo.cynthia.repositorios.UserRepository;
 
 @Service
@@ -16,6 +18,9 @@ public class AppService {
 	
 	@Autowired
 	private UserRepository repositorio_user;
+	
+	@Autowired
+	private EventRepository repositorio_event;
 	
 	public User register(User nuevoUsuario, BindingResult result) {
 		
@@ -83,5 +88,10 @@ public class AppService {
             return null;
         }
     }
+	
+	/*Guarda evento en BD*/
+	public Event save_event(Event thisEvent) {
+		return repositorio_event.save(thisEvent);
+	}
 	
 }

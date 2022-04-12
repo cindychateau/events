@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.codingdojo.cynthia.modelos.Event;
 import com.codingdojo.cynthia.modelos.LoginUser;
 import com.codingdojo.cynthia.modelos.State;
 import com.codingdojo.cynthia.modelos.User;
@@ -72,7 +73,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/dashboard")
-	public String dashboard(HttpSession session, Model model) {
+	public String dashboard(HttpSession session, Model model, @ModelAttribute("event") Event event) {
 		/*REVISAMOS SESION*/
 		User currentUser = (User)session.getAttribute("user_session");
 		if(currentUser == null) {
@@ -82,11 +83,11 @@ public class UserController {
 		
 		User myUser = servicio.find_user(currentUser.getId());
 		
+		model.addAttribute("states", State.States);
 		model.addAttribute("user", myUser);
+		/*Falta lista de eventos en mi estado, y lista de eventos en otros estados*/
 		
 		return "dashboard.jsp";
-		
-		/*REVISAMOS SESION*/
 	}
 	
 }
