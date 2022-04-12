@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.codingdojo.cynthia.modelos.Event;
+import com.codingdojo.cynthia.modelos.Message;
 import com.codingdojo.cynthia.modelos.State;
 import com.codingdojo.cynthia.modelos.User;
 import com.codingdojo.cynthia.servicios.AppService;
@@ -87,6 +88,47 @@ public class EventController {
 		servicio.remove_event_user(currentUser.getId(), event_id);
 		
 		return "redirect:/dashboard";
+	}
+	
+	@GetMapping("/{event_id}")
+	public String show_event(@PathVariable("event_id") Long event_id, HttpSession session,
+							 Model model, @ModelAttribute("message") Message message) {
+		/*REVISAMOS SESION*/
+		User currentUser = (User)session.getAttribute("user_session");
+		if(currentUser == null) {
+			return "redirect:/";
+		}
+		/*REVISAMOS SESION*/
+		
+		Event event_edit = servicio.find_event(event_id);
+		model.addAttribute("evento", event_edit);
+		
+		return "show.jsp";
+	}
+	
+	@PostMapping("/message")
+	public String message(@Valid @ModelAttribute("message") Message message, BindingResult result,
+						  HttpSession session, Model model) {
+		/*REVISAMOS SESION*/
+		User currentUser = (User)session.getAttribute("user_session");
+		if(currentUser == null) {
+			return "redirect:/";
+		}
+		/*REVISAMOS SESION*/
+		
+		Long event_id = message.getEvent().getId();
+		Event event_edit = servicio.find_event(event_id);
+		
+		if(result.hasErrors()) {
+			model.addAttribute("evento", event_edit);
+			return "show.jsp";
+		}
+		
+		servicio.save_message(message);
+		
+		return "redirect:/events/"+event_id;
+		
+		
 	}
 	
 	

@@ -10,8 +10,10 @@ import org.springframework.validation.BindingResult;
 
 import com.codingdojo.cynthia.modelos.Event;
 import com.codingdojo.cynthia.modelos.LoginUser;
+import com.codingdojo.cynthia.modelos.Message;
 import com.codingdojo.cynthia.modelos.User;
 import com.codingdojo.cynthia.repositorios.EventRepository;
+import com.codingdojo.cynthia.repositorios.MessageRepository;
 import com.codingdojo.cynthia.repositorios.UserRepository;
 
 @Service
@@ -22,6 +24,9 @@ public class AppService {
 	
 	@Autowired
 	private EventRepository repositorio_event;
+	
+	@Autowired
+	private MessageRepository repositorio_message;
 	
 	public User register(User nuevoUsuario, BindingResult result) {
 		
@@ -129,6 +134,10 @@ public class AppService {
 		
 		myUser.getEventsAttending().remove(myEvent);
 		repositorio_user.save(myUser);
+	}
+	
+	public Message save_message(Message thisMessage) {
+		return repositorio_message.save(thisMessage);
 	}
 	
 	
